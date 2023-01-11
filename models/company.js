@@ -66,6 +66,30 @@ class Company {
     return companiesRes.rows;
   }
 
+  /** Filter all companies.
+   *
+   * Returns [{ handle, name, description, numEmployees, logoUrl }, ...]
+   * */
+
+  static async filterAll({minEmployees, maxEmployees, nameLike}) {
+    if(minEmployees > maxEmployees){
+      throw new BadRequestError("Min Employees cannot be greater than max employees.")
+    }
+    if(nameLike && !minEmployees && !maxEmployees){
+    const companiesRes = await db.query(
+        `SELECT handle,
+                name,
+                description,
+                num_employees AS "numEmployees",
+                logo_url AS "logoUrl"
+           FROM companies
+           WHERE name ILIKE $1
+           ORDER BY name`, [`%${nameLike}%`]);
+    }
+    return companiesRes.rows;
+    }
+
+
   /** Given a company handle, return data about company.
    *
    * Returns { handle, name, description, numEmployees, logoUrl, jobs }
@@ -143,6 +167,11 @@ class Company {
     if (!company) throw new NotFoundError(`No company: ${handle}`);
   }
 }
+// async function testFilter(){
+//   const testFilter = await Company.filterAll({nameLike: ''})
+//   console.log(testFilter)
+// }
+// testFilter()
 
 
 module.exports = Company;
