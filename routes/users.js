@@ -25,6 +25,8 @@ const router = express.Router();
  *  {user: { username, firstName, lastName, email, isAdmin }, token }
  *
  * Authorization required: login
+ *
+ * TODO: Check user is admin?
  **/
 
 router.post("/", ensureLoggedIn, async function (req, res, next) {
@@ -99,6 +101,8 @@ router.patch("/:username", ensureLoggedIn, async function (req, res, next) {
 /** DELETE /[username]  =>  { deleted: username }
  *
  * Authorization required: login
+ *
+ * TODO: Check that the username is the account we want to delete
  **/
 
 router.delete("/:username", ensureLoggedIn, async function (req, res, next) {
