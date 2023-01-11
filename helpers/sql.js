@@ -32,4 +32,37 @@ function sqlForPartialUpdate(dataToUpdate, jsToSql) {
   };
 }
 
-module.exports = { sqlForPartialUpdate };
+/** TODO: Docstrings */
+
+function sqlForFilter(dataToUpdate, jsToSql) {
+  const keys = Object.keys(dataToUpdate);
+
+  if (keys.length === 0) throw new BadRequestError("No data");
+
+  // {firstName: 'Aliya', age: 32} => ['"first_name"=$1', '"age"=$2']
+  const cols = keys.map((colName, idx) => {
+    let str = ``;
+
+    if(colName === "nameLike") {
+      str += `${jsToSql[colName]} ILIKE $${idx+1}`
+    }
+
+    if(colName === "minEmployees"){
+      str += `"${jsToSql[colName]}" > $${idx+1}`
+    }
+
+    if(colName === "maxEmployees"){
+      str += `"${jsToSql[colName]}" < $${idx+1}`
+    }
+
+    return str;
+  });
+
+
+  return {
+    setCols: cols.join(" AND "),
+    values: Object.values(dataToUpdate),
+  };
+}
+
+module.exports = { sqlForPartialUpdate, sqlForFilter };

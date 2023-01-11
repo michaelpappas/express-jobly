@@ -2,7 +2,7 @@
 
 const db = require("../db");
 const { BadRequestError, NotFoundError } = require("../expressError");
-const { sqlForPartialUpdate } = require("../helpers/sql");
+const { sqlForPartialUpdate, sqlForFilter } = require("../helpers/sql");
 
 /** Related functions for companies. */
 
@@ -71,23 +71,45 @@ class Company {
    * Returns [{ handle, name, description, numEmployees, logoUrl }, ...]
    * */
 
-  static async filterAll({minEmployees, maxEmployees, nameLike}) {
-    if(minEmployees > maxEmployees){
-      throw new BadRequestError("Min Employees cannot be greater than max employees.")
+  static async filterAll(filters) {
+
+    if(filters.nameLike){
+      filters.nameLike = `%${filters.nameLike}%`
     }
-    if(nameLike && !minEmployees && !maxEmployees){
+
+    const {setCols, values} = sqlForFilter(
+      filters,
+      {
+        minEmployees: "num_employees",
+        maxEmployees: "num_employees",
+        nameLike: "name"
+      }
+    )
+
+    // if()
+
+    console.log("setCols=", setCols)
+
+    const querySql = `SELECT handle,
+          name,
+          description,
+          num_employees AS "numEmployees",
+          logo_url AS "logoUrl"
+      FROM companies
+      WHERE ${setCols}
+      ORDER BY name`;
+
+
     const companiesRes = await db.query(
-        `SELECT handle,
-                name,
-                description,
-                num_employees AS "numEmployees",
-                logo_url AS "logoUrl"
-           FROM companies
-           WHERE name ILIKE $1
-           ORDER BY name`, [`%${nameLike}%`]);
-    }
+        querySql, values);
+
+    console.log("OUR SQL STATEMENT", querySql)
+    console.log("OUR VALUES=", values)
+
+
     return companiesRes.rows;
-    }
+  }
+
 
 
   /** Given a company handle, return data about company.
