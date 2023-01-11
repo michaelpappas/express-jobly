@@ -73,9 +73,7 @@ class Company {
 
   static async filterAll(filters) {
 
-    if(filters.nameLike){
-      filters.nameLike = `%${filters.nameLike}%`
-    }
+
 
     const {setCols, values} = sqlForFilter(
       filters,
@@ -85,8 +83,6 @@ class Company {
         nameLike: "name"
       }
     )
-
-    // if()
 
     console.log("setCols=", setCols)
 

@@ -32,14 +32,33 @@ function sqlForPartialUpdate(dataToUpdate, jsToSql) {
   };
 }
 
-/** TODO: Docstrings */
+/**
+ *  Takes two inputs: filterData and jsToSql
+ *    - filterData: An object with key value pairs of columns we want to filter
+ *    - jsToSql: Converts camelCase to snakeCase to match db column names
+ *
+ *  Returns an object with setCols and values keys
+ *    - setCols: A string representing the the variables and the indexes of
+ *               the prepared statement.
+ *    - values:  The actual data to insert into the prepared statement.
+ *
+ *  Example return: {
+      setCols: '"name ILIKE $1 AND "num_employees" <= $2"'
+      values: [ '%c%', 2 ]
+    }
+ *
+ */
 
-function sqlForFilter(dataToUpdate, jsToSql) {
-  const keys = Object.keys(dataToUpdate);
+function sqlForFilter(filterData, jsToSql) {
+
+  if(filterData.nameLike){
+    filterData.nameLike = `%${filterData.nameLike}%`
+  }
+
+  const keys = Object.keys(filterData);
 
   if (keys.length === 0) throw new BadRequestError("No data");
 
-  // {firstName: 'Aliya', age: 32} => ['"first_name"=$1', '"age"=$2']
   const cols = keys.map((colName, idx) => {
     let str = ``;
 
@@ -48,11 +67,11 @@ function sqlForFilter(dataToUpdate, jsToSql) {
     }
 
     if(colName === "minEmployees"){
-      str += `"${jsToSql[colName]}" > $${idx+1}`
+      str += `"${jsToSql[colName]}" >= $${idx+1}`
     }
 
     if(colName === "maxEmployees"){
-      str += `"${jsToSql[colName]}" < $${idx+1}`
+      str += `"${jsToSql[colName]}" <= $${idx+1}`
     }
 
     return str;
@@ -61,7 +80,7 @@ function sqlForFilter(dataToUpdate, jsToSql) {
 
   return {
     setCols: cols.join(" AND "),
-    values: Object.values(dataToUpdate),
+    values: Object.values(filterData),
   };
 }
 
