@@ -23,7 +23,7 @@ function sqlForPartialUpdate(dataToUpdate, jsToSql) {
 
   // {firstName: 'Aliya', age: 32} => ['"first_name"=$1', '"age"=$2']
   const cols = keys.map((colName, idx) =>
-      `"${jsToSql[colName] || colName}"=$${idx + 1}`,
+    `"${jsToSql[colName] || colName}"=$${idx + 1}`,
   );
 
   return {
@@ -51,8 +51,8 @@ function sqlForPartialUpdate(dataToUpdate, jsToSql) {
 
 function sqlForFilter(filterData, jsToSql) {
 
-  if(filterData.nameLike){
-    filterData.nameLike = `%${filterData.nameLike}%`
+  if (filterData.nameLike) {
+    filterData.nameLike = `%${filterData.nameLike}%`;
   }
 
   const keys = Object.keys(filterData);
@@ -62,16 +62,16 @@ function sqlForFilter(filterData, jsToSql) {
   const cols = keys.map((colName, idx) => {
     let str = ``;
 
-    if(colName === "nameLike") {
-      str += `${jsToSql[colName]} ILIKE $${idx+1}`
+    if (colName === "nameLike") {
+      str += `${jsToSql[colName]} ILIKE $${idx + 1}`;
     }
 
-    if(colName === "minEmployees"){
-      str += `"${jsToSql[colName]}" >= $${idx+1}`
+    if (colName === "minEmployees") {
+      str += `${jsToSql[colName]} >= $${idx + 1}`;
     }
 
-    if(colName === "maxEmployees"){
-      str += `"${jsToSql[colName]}" <= $${idx+1}`
+    if (colName === "maxEmployees") {
+      str += `${jsToSql[colName]} <= $${idx + 1}`;
     }
 
     return str;

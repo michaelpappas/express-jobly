@@ -29,7 +29,7 @@ router.post("/", ensureLoggedIn, async function (req, res, next) {
   const validator = jsonschema.validate(
     req.body,
     companyNewSchema,
-    {required: true}
+    { required: true }
   );
   if (!validator.valid) {
     const errs = validator.errors.map(e => e.stack);
@@ -49,23 +49,41 @@ router.post("/", ensureLoggedIn, async function (req, res, next) {
  * - nameLike (will find case-insensitive, partial matches)
  *
  * Authorization required: none
+ *
+ * TODO: Combine our static method so we only have one static method in this
+ *       route.
  */
 
 router.get("/", async function (req, res, next) {
   let companies;
-  if(Object.keys(req.query).length){
-    console.log("type of",typeof req.query.minEmployees)
-    const result = jsonschema.validate(
-      req.query, companyFilterSchema, {required: true});
 
-    if(!result.valid){
+  // NOTE: req.query is an immutable object!!!
+
+  const q = req.query;
+
+  if (Object.keys(req.query).length) {
+
+    if (req.query.minEmployees !== undefined) {
+      q.minEmployees = Number(q.minEmployees);
+    }
+
+    if (q.maxEmployees !== undefined) {
+      q.maxEmployees = Number(q.maxEmployees);
+    }
+
+    const result = jsonschema.validate(
+      q,
+      companyFilterSchema,
+      { required: true }
+    );
+
+    if (!result.valid) {
       const errs = result.errors.map(err => err.stack);
       throw new BadRequestError(errs);
     }
 
-    companies = await Company.filterAll(req.query)
-  }
-  else{
+    companies = await Company.filterAll(q);
+  } else {
     companies = await Company.findAll();
   }
 
@@ -100,7 +118,7 @@ router.patch("/:handle", ensureLoggedIn, async function (req, res, next) {
   const validator = jsonschema.validate(
     req.body,
     companyUpdateSchema,
-    {required:true}
+    { required: true }
   );
   if (!validator.valid) {
     const errs = validator.errors.map(e => e.stack);

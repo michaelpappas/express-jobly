@@ -23,4 +23,6 @@ describe("testSqlForPartialUpdate", function () {
     }
     expect(result).toEqual(expectedResult);
   });
+
+  // TODO: Check if it still works with just one key
 });

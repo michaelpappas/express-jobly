@@ -192,12 +192,17 @@ describe("GET /companies", function () {
   });
 
   test("error when min greater than max employees", async function () {
-    const resp = await request(app).get("/companies?minEmployees=2&maxEmployees=1");
+    const resp = await request(app)
+      .get("/companies?minEmployees=2&maxEmployees=1");
+
     expect(resp.status).toEqual(400);
   });
 
   test("error when invalid search query", async function () {
-    const resp = await request(app).get("/companies?admin=true");
+    const resp = await request(app)
+      .get("/companies")
+      .query({admin:true});
+
     expect(resp.status).toEqual(400);
   });
 

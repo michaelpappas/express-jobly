@@ -99,10 +99,8 @@ class Company {
       WHERE ${setCols}
       ORDER BY name`;
 
-
     const companiesRes = await db.query(
       querySql, values);
-
 
     return companiesRes.rows;
   }
