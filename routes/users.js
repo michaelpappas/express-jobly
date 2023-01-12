@@ -5,12 +5,13 @@
 const jsonschema = require("jsonschema");
 
 const express = require("express");
-const { ensureLoggedIn } = require("../middleware/auth");
+const { ensureLoggedIn, ensureAdminUser} = require("../middleware/auth");
 const { BadRequestError } = require("../expressError");
 const User = require("../models/user");
 const { createToken } = require("../helpers/tokens");
 const userNewSchema = require("../schemas/userNew.json");
 const userUpdateSchema = require("../schemas/userUpdate.json");
+
 
 const router = express.Router();
 
@@ -29,7 +30,7 @@ const router = express.Router();
  * TODO: Check user is admin?
  **/
 
-router.post("/", ensureLoggedIn, async function (req, res, next) {
+router.post("/", ensureLoggedIn, ensureAdminUser, async function (req, res, next) {
   const validator = jsonschema.validate(
     req.body,
     userNewSchema,
