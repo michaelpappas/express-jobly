@@ -85,7 +85,7 @@ router.get("/:username", ensureLoggedIn, ensureAdminOrUser, async function (req,
  * Authorization required: login
  **/
 
-router.patch("/:username", ensureLoggedIn, async function (req, res, next) {
+router.patch("/:username", ensureLoggedIn, ensureAdminOrUser, async function (req, res, next) {
   const validator = jsonschema.validate(
     req.body,
     userUpdateSchema,
@@ -108,7 +108,7 @@ router.patch("/:username", ensureLoggedIn, async function (req, res, next) {
  * TODO: Check that the username is the account we want to delete
  **/
 
-router.delete("/:username", ensureLoggedIn, async function (req, res, next) {
+router.delete("/:username", ensureLoggedIn, ensureAdminOrUser, async function (req, res, next) {
   await User.remove(req.params.username);
   return res.json({ deleted: req.params.username });
 });

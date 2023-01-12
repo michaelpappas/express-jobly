@@ -48,7 +48,7 @@ function ensureAdminUser(req, res, next){
 }
 /** Middleware to ensure that user in url parameter matches user in token or is admin. */
 function ensureAdminOrUser (req, res, next){
-  if(res.locals.user !== req.params.username && !res.locals.user.isAdmin){
+  if(res.locals.user.username !== req.params.username && !res.locals.user.isAdmin){
     throw new UnauthorizedError()
   }
 
