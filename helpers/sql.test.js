@@ -1,5 +1,6 @@
 "use strict";
 
+const { BadRequestError } = require("../expressError");
 const { sqlForPartialUpdate } = require("./sql");
 
 describe("testSqlForPartialUpdate", function () {
@@ -25,4 +26,15 @@ describe("testSqlForPartialUpdate", function () {
   });
 
   // TODO: Check if it still works with just one key
+
+  test("fail with empty filter data", function () {
+
+    try {
+      const result = sqlForPartialUpdate({}, {});
+    }
+    catch (err){
+      expect(err instanceof BadRequestError).toBeTruthy();
+    }
+
+  });
 });

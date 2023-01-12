@@ -46,8 +46,11 @@ function ensureAdminUser(req, res, next){
 
   return next()
 }
-/** Middleware to ensure that user in url parameter matches user in token or is admin. */
-function ensureAdminOrUser (req, res, next){
+/** Middleware to ensure that user in url parameter matches user in token
+ * or is admin.
+ * */
+//TODO: change name to ensureUserOrAdmin
+function ensureUserOrAdmin (req, res, next){
   if(res.locals.user.username !== req.params.username && !res.locals.user.isAdmin){
     throw new UnauthorizedError()
   }
@@ -62,5 +65,5 @@ module.exports = {
   authenticateJWT,
   ensureLoggedIn,
   ensureAdminUser,
-  ensureAdminOrUser
+  ensureUserOrAdmin
 };

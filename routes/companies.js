@@ -8,6 +8,7 @@ const express = require("express");
 const { BadRequestError } = require("../expressError");
 const { ensureLoggedIn, ensureAdminUser } = require("../middleware/auth");
 const Company = require("../models/company");
+const db = require("../db");
 
 const companyNewSchema = require("../schemas/companyNew.json");
 const companyUpdateSchema = require("../schemas/companyUpdate.json");
@@ -22,7 +23,7 @@ const router = new express.Router();
  *
  * Returns { handle, name, description, numEmployees, logoUrl }
  *
- * Authorization required: login
+ * Authorization required: login, adminUser
  */
 
 router.post("/", ensureLoggedIn, ensureAdminUser, async function (req, res, next) {
@@ -58,6 +59,8 @@ router.get("/", async function (req, res, next) {
   let companies;
 
   // NOTE: req.query is an immutable object!!!
+
+  // TODO: remove after done testing db console.log(await db.query(`SELECT * FROM cats`))
 
   const q = req.query;
 
@@ -111,7 +114,7 @@ router.get("/:handle", async function (req, res, next) {
  *
  * Returns { handle, name, description, numEmployees, logo_url }
  *
- * Authorization required: login
+ * Authorization required: login, adminUser
  */
 
 router.patch("/:handle", ensureLoggedIn, ensureAdminUser, async function (req, res, next) {
@@ -131,7 +134,7 @@ router.patch("/:handle", ensureLoggedIn, ensureAdminUser, async function (req, r
 
 /** DELETE /[handle]  =>  { deleted: handle }
  *
- * Authorization: login
+ * Authorization required: login, adminUser
  */
 
 router.delete("/:handle", ensureLoggedIn, ensureAdminUser, async function (req, res, next) {
