@@ -242,6 +242,16 @@ describe("PATCH /users/:username", () => {
     expect(resp.statusCode).toEqual(404);
   });
 
+  test("Unauth PATCH if not admin", async function () {
+    const resp = await request(app)
+        .patch(`/users/nope`)
+        .send({
+          firstName: "Nope",
+        })
+        .set("authorization", `Bearer ${u1Token}`);
+    expect(resp.statusCode).toEqual(401);
+  });
+
   test("bad request if invalid data", async function () {
     const resp = await request(app)
         .patch(`/users/u1`)
