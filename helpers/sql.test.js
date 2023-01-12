@@ -1,13 +1,17 @@
 "use strict";
 
 const { BadRequestError } = require("../expressError");
-const { sqlForPartialUpdate } = require("./sql");
+const { sqlForPartialUpdate, sqlForFilter } = require("./sql");
 
 describe("testSqlForPartialUpdate", function () {
   const data = {
     username: "new",
     firstName: "Test",
     lastName: "Tester",
+  };
+
+  const dataOneKey = {
+    username: "Tester",
   };
 
   const jsToSql = {
@@ -21,20 +25,32 @@ describe("testSqlForPartialUpdate", function () {
     const expectedResult = {
       setCols: '"username"=$1, "first_name"=$2, "last_name"=$3',
       values: ['new', 'Test', 'Tester']
-    }
+    };
     expect(result).toEqual(expectedResult);
   });
 
-  // TODO: Check if it still works with just one key
+  test("correct result on one key", function () {
+
+    const result = sqlForPartialUpdate(dataOneKey, jsToSql);
+    const expectedResult = {
+      setCols: '"username"=$1',
+      values: ['Tester']
+    };
+    expect(result).toEqual(expectedResult);
+  });
+});
+
+describe("testSqlForPartialUpdate", function () {
+
+  const emptyData = {};
 
   test("fail with empty filter data", function () {
-
     try {
-      const result = sqlForPartialUpdate({}, {});
+      const result = sqlForFilter(emptyData, emptyData);
     }
-    catch (err){
+    catch (err) {
       expect(err instanceof BadRequestError).toBeTruthy();
     }
-
   });
+
 });

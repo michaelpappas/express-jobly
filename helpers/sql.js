@@ -58,7 +58,7 @@ function sqlForFilter(filterData, jsToSql) {
 
   const keys = Object.keys(filterData);
 
-  // if (keys.length === 0) throw new BadRequestError("No data");
+  if (keys.length === 0) throw new BadRequestError("No data");
 
   const cols = keys.map((colName, idx) => {
     let str = ``;

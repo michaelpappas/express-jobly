@@ -41,8 +41,10 @@ function ensureLoggedIn(req, res, next) {
 }
 
 /**  Middleware to ensure user is admin.*/
+// TODO: collapse ensureLoggedIn and admin user
+
 function ensureAdminUser(req, res, next){
-  if(!res.locals.user.isAdmin) throw new UnauthorizedError();
+  if(!res.locals.user || !res.locals.user.isAdmin) throw new UnauthorizedError();
 
   return next()
 }
@@ -50,6 +52,7 @@ function ensureAdminUser(req, res, next){
  * or is admin.
  * */
 //TODO: change name to ensureUserOrAdmin
+// TODO: Refactor
 function ensureUserOrAdmin (req, res, next){
   if(res.locals.user.username !== req.params.username && !res.locals.user.isAdmin){
     throw new UnauthorizedError()
