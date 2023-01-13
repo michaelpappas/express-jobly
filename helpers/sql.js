@@ -95,6 +95,11 @@ function sqlForFilter(filterData, jsToSql) {
     cols.push(`${jsToSql["title"]} ILIKE $${idx + 1}`);
     idx++;
   }
+  if (filterData.companyHandle) {
+    cols.push(`${jsToSql["companyHandle"]} = $${idx + 1}`);
+    idx++;
+  }
+  debugger;
 
   delete filterData.hasEquity;
 

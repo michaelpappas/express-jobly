@@ -26,19 +26,19 @@ describe("findAll", function () {
     let jobs = await Job.findAll();
     expect(jobs).toEqual([
       {
-        id: 1,
+        id: expect.any(Number),
         title: "j1",
         salary: 1,
         equity: 0
       },
       {
-        id: 2,
+        id: expect.any(Number),
         title: "j2",
         salary: 2,
         equity: .2
       },
       {
-        id: 3,
+        id: expect.any(Number),
         title: "j3",
         salary: 3,
         equity: .3
@@ -47,16 +47,16 @@ describe("findAll", function () {
   });
 
   test("works: with filtering min salary", async function () {
-    let companies = await Job.filterAll({ minSalary: 2 });
+    let companies = await Job.findAll({ minSalary: 2 });
     expect(companies).toEqual([
       {
-        id: 2,
+        id: expect.any(Number),
         title: "j2",
         salary: 2,
         equity: .2
       },
       {
-        id: 3,
+        id: expect.any(Number),
         title: "j3",
         salary: 3,
         equity: .3
@@ -64,10 +64,10 @@ describe("findAll", function () {
     ]);
   });
   test("works: with filtering min salary and has equity", async function () {
-    let companies = await Job.filterAll({ minSalary: 3, hasEquity: true });
+    let companies = await Job.findAll({ minSalary: 3, hasEquity: true });
     expect(companies).toEqual([
       {
-        id: 3,
+        id: expect.any(Number),
         title: "j3",
         salary: 3,
         equity: .3
@@ -76,22 +76,34 @@ describe("findAll", function () {
   });
 
   test("works: with filtering has no equity", async function () {
-    let companies = await Job.filterAll({ hasEquity: false });
+    let companies = await Job.findAll({ hasEquity: "false" });
     expect(companies).toEqual([
       {
-        id: 1,
+        id: expect.any(Number),
         title: "j1",
         salary: 1,
         equity: 0
+      },
+      {
+        id: expect.any(Number),
+        title: "j2",
+        salary: 2,
+        equity: .2
+      },
+      {
+        id: expect.any(Number),
+        title: "j3",
+        salary: 3,
+        equity: .3
       }
     ]);
   });
 
   test("works: with filtering title", async function () {
-    let companies = await Job.filterAll({ title: "j3" });
+    let companies = await Job.findAll({ title: "j3" });
     expect(companies).toEqual([
       {
-        id: 3,
+        id: expect.any(Number),
         title: "j3",
         salary: 3,
         equity: .3
@@ -100,7 +112,7 @@ describe("findAll", function () {
   });
 
   test("works: query returns no results", async function () {
-    let companies = await Job.filterAll({ title: "nope" });
+    let companies = await Job.findAll({ title: "nope" });
     expect(companies).toEqual([]);
   });
 });
@@ -140,15 +152,6 @@ describe("create", function () {
     ]);
   });
 
-  test("bad request with dupe", async function () {
-    try {
-      await Job.create(newJob);
-      await Job.create(newJob);
-      throw new Error("fail test, you shouldn't get here");
-    } catch (err) {
-      expect(err instanceof BadRequestError).toBeTruthy();
-    }
-  });
 });
 
 // /************************************** update */

@@ -13,6 +13,7 @@ const db = require("../db");
 const companyNewSchema = require("../schemas/companyNew.json");
 const companyUpdateSchema = require("../schemas/companyUpdate.json");
 const companyFilterSchema = require("../schemas/companyFilter.json");
+const Job = require("../models/job");
 
 const router = new express.Router();
 
@@ -103,7 +104,8 @@ router.get("/", async function (req, res, next) {
 
 router.get("/:handle", async function (req, res, next) {
   const company = await Company.get(req.params.handle);
-  return res.json({ company });
+  const jobs = await Job.findAll({ companyHandle: company.handle });
+  return res.json({ company, jobs });
 });
 
 /** PATCH /[handle] { fld1, fld2, ... } => { company }

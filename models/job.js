@@ -27,6 +27,8 @@ class Job {
     // if (duplicateCheck.rows[0])
     //   throw new BadRequestError(`Duplicate company: ${handle}`);
 
+
+
     const result = await db.query(
       `INSERT INTO jobs(title, salary, equity, company_handle)
           VALUES ($1, $2, $3, $4)
@@ -54,22 +56,30 @@ class Job {
 
     if (Object.keys(filters).length) {
 
-      const { setCols, values } = sqlForFilter(
-        filters,
-        {
-          title: "title",
-          minSalary: "salary",
-          hasEquity: "equity"
-        }
-      );
+      if (Object.keys(filters).length == 1 && filters.hasEquity === "false") {
+        jobsRes = await db.query(
+          `SELECT id, title, salary, equity
+              FROM jobs
+                ORDER BY title`);
+      }
+      else {
+        const { setCols, values } = sqlForFilter(
+          filters,
+          {
+            companyHandle: "company_handle",
+            title: "title",
+            minSalary: "salary",
+            hasEquity: "equity"
+          }
+        );
 
-      console.log(setCols, values)
+        jobsRes = await db.query(
+          `SELECT id, title, salary, equity
+              FROM jobs
+                WHERE ${setCols}
+                  ORDER BY title`, values);
+      }
 
-      jobsRes = await db.query(
-        `SELECT id, title, salary, equity
-            FROM jobs
-              WHERE ${setCols}
-                ORDER BY title`, values);
 
     } else {
 
@@ -131,23 +141,18 @@ class Job {
   //    * Throws NotFoundError if not found.
   //    **/
 
-  //   static async get(handle) {
-  //     const companyRes = await db.query(
-  //       `SELECT handle,
-  //                 name,
-  //                 description,
-  //                 num_employees AS "numEmployees",
-  //                 logo_url AS "logoUrl"
-  //            FROM companies
-  //            WHERE handle = $1`,
-  //       [handle]);
+  static async get(id) {
+    const result = await db.query(
+      `SELECT id, title, salary, equity
+        FROM jobs
+          WHERE id = $1`, [id]);
 
-  //     const company = companyRes.rows[0];
+    const job = result.rows[0];
 
-  //     if (!company) throw new NotFoundError(`No company: ${handle}`);
+    if (!job) throw new NotFoundError(`No job at id: ${id}`);
 
-  //     return company;
-  //   }
+    return job;
+  }
 
   //   /** Update company data with `data`.
   //    *
@@ -200,6 +205,13 @@ class Job {
   //     if (!company) throw new NotFoundError(`No company: ${handle}`);
   //   }
 }
+
+// async function findJob() {
+//   const job = await Job.findAll({ hasEquity: "false" });
+//   debugger;
+//   return job;
+// }
+// findJob();
 
 
 module.exports = Job;
