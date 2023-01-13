@@ -201,26 +201,6 @@ class Job {
   //   }
 }
 
-async function testJob() {
-  // const newJob = await Job.create({
-  //   title: "newJob",
-  //   salary: 5000,
-  //   equity: .5,
-  //   companyHandle: "anderson-arias-morrow"
-  // }
-  // );
-  // console.log(newJob);
-
-  const jobs = await Job.findAll({
-    minSalary: 55000,
-    hasEquity: 'true',
-    title: "transport"
-  });
-
-  console.log(jobs);
-}
-
-testJob();
 
 module.exports = Job;
 

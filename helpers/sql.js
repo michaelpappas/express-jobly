@@ -64,47 +64,39 @@ function sqlForFilter(filterData, jsToSql) {
 
   if (keys.length === 0) throw new BadRequestError("No data");
 
-  const cols = keys.map((colName, idx) => {
-    let str = ``;
+  const cols = [];
+  let idx = 0;
 
-    if (colName === "nameLike") {
-      str += `${jsToSql[colName]} ILIKE $${idx + 1}`;
-    }
+  if (filterData.nameLike) {
+    cols.push(`${jsToSql["nameLike"]} ILIKE $${idx + 1}`);
+    idx++;
+  }
 
-    if (colName === "minEmployees") {
-      str += `${jsToSql[colName]} >= $${idx + 1}`;
-    }
+  if (filterData.minEmployees) {
+    cols.push(`${jsToSql["minEmployees"]} >= $${idx + 1}`);
+    idx++;
+  }
 
-    if (colName === "maxEmployees") {
-      str += `${jsToSql[colName]} <= $${idx + 1}`;
-    }
+  if (filterData.maxEmployees) {
+    cols.push(`${jsToSql["maxEmployees"]} <= $${idx + 1}`);
+    idx++;
+  }
 
-    if (colName === "minSalary") {
-      str += `${jsToSql[colName]} >= $${idx + 1}`;
-    }
+  if (filterData.minSalary) {
+    cols.push(`${jsToSql["minSalary"]} >= $${idx + 1}`);
+    idx++;
+  }
 
-    if (colName === "hasEquity") {
+  if (filterData.hasEquity === "true") {
+    cols.push(`${jsToSql["hasEquity"]} > 0`);
+  }
 
-      str += `${jsToSql[colName]} > $${idx + 1}`;
+  if (filterData.title) {
+    cols.push(`${jsToSql["title"]} ILIKE $${idx + 1}`);
+    idx++;
+  }
 
-      // if (filterData.hasEquity) {
-      //   str += `${jsToSql[colName]} > 0`;
-      // } else {
-      //   str += `${jsToSql[colName]} >= 0`;
-      // }
-
-    }
-
-    if (colName === "title") {
-      str += `${jsToSql[colName]} ILIKE $${idx + 1}`;
-    }
-
-    return str;
-  });
-
-  // delete filterData.hasEquity;
-
-  console.log("data types=", Object.values(filterData))
+  delete filterData.hasEquity;
 
   return {
     setCols: cols.join(" AND "),
