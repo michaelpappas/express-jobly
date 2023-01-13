@@ -49,14 +49,12 @@ class Job {
    * */
 
   static async findAll(filters = false) {
-    let querySql = `SELECT id, title, salary, equity
-                       FROM jobs
-                       ORDER BY title`;
-    let values;
+
+    let jobsRes;
 
     if (Object.keys(filters).length) {
 
-      let { setCols, values } = sqlForFilter(
+      const { setCols, values } = sqlForFilter(
         filters,
         {
           title: "title",
@@ -65,15 +63,21 @@ class Job {
         }
       );
 
-      querySql = `SELECT id, title, salary, equity
-         FROM jobs
-      WHERE ${setCols}
-      ORDER BY title`;
+      console.log(setCols, values)
+
+      jobsRes = await db.query(
+        `SELECT id, title, salary, equity
+            FROM jobs
+              WHERE ${setCols}
+                ORDER BY title`, values);
+
+    } else {
+
+      jobsRes = await db.query(
+        `SELECT id, title, salary, equity
+            FROM jobs
+              ORDER BY title`);
     }
-
-
-    const jobsRes = await db.query(
-      querySql, values);
 
     return jobsRes.rows;
   }
@@ -198,14 +202,22 @@ class Job {
 }
 
 async function testJob() {
-  const newJob = await Job.create({
-    title: "newJob",
-    salary: 5000,
-    equity: .5,
-    companyHandle: "anderson-arias-morrow"
-  }
-  );
-  console.log(newJob);
+  // const newJob = await Job.create({
+  //   title: "newJob",
+  //   salary: 5000,
+  //   equity: .5,
+  //   companyHandle: "anderson-arias-morrow"
+  // }
+  // );
+  // console.log(newJob);
+
+  const jobs = await Job.findAll({
+    minSalary: 55000,
+    hasEquity: 'true',
+    title: "transport"
+  });
+
+  console.log(jobs);
 }
 
 testJob();

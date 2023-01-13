@@ -18,7 +18,7 @@ const { BadRequestError } = require("../expressError");
  */
 
 function sqlForPartialUpdate(dataToUpdate, jsToSql) {
-  console.log("object.keys(dataToUpdate- ", Object.keys(dataToUpdate))
+  console.log("object.keys(dataToUpdate- ", Object.keys(dataToUpdate));
   const keys = Object.keys(dataToUpdate);
   if (keys.length === 0) throw new BadRequestError("No data");
 
@@ -56,6 +56,10 @@ function sqlForFilter(filterData, jsToSql) {
     filterData.nameLike = `%${filterData.nameLike}%`;
   }
 
+  if (filterData.title) {
+    filterData.title = `%${filterData.title}%`;
+  }
+
   const keys = Object.keys(filterData);
 
   if (keys.length === 0) throw new BadRequestError("No data");
@@ -75,9 +79,32 @@ function sqlForFilter(filterData, jsToSql) {
       str += `${jsToSql[colName]} <= $${idx + 1}`;
     }
 
+    if (colName === "minSalary") {
+      str += `${jsToSql[colName]} >= $${idx + 1}`;
+    }
+
+    if (colName === "hasEquity") {
+
+      str += `${jsToSql[colName]} > $${idx + 1}`;
+
+      // if (filterData.hasEquity) {
+      //   str += `${jsToSql[colName]} > 0`;
+      // } else {
+      //   str += `${jsToSql[colName]} >= 0`;
+      // }
+
+    }
+
+    if (colName === "title") {
+      str += `${jsToSql[colName]} ILIKE $${idx + 1}`;
+    }
+
     return str;
   });
 
+  // delete filterData.hasEquity;
+
+  console.log("data types=", Object.values(filterData))
 
   return {
     setCols: cols.join(" AND "),
