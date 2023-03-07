@@ -46,54 +46,54 @@ npm run dev
 
 ```
 helpers\                # Helpers folder
- |--sql.js              # Static html
- |--sql.test.js         # Static html
- |--tokens.js           # Static html
- |--tokens.test.js      # Static html
+ |--sql.js              # sql helper functions
+ |--sql.test.js         # tests for sql helper functions
+ |--tokens.js           # tokens helper functions
+ |--tokens.test.js      # tests for tokens helper functions
 
 middleware\             # Middleware folder
- |--auth.js             # Static html
- |--auth.test.js        # Static html
+ |--auth.js             # authorization middleware
+ |--auth.test.js        # tests for authorization middleware
 
 models\                 # Models folder
- |--company.js          # Static html
- |--company.test.js     # Static html
- |--job.js              # Static html
- |--job.test.js         # Static html
- |--user.js             # Static html
- |--user.test.js        # Static html
+ |--company.js          # companies database models
+ |--company.test.js     # tests for companies database models
+ |--job.js              # job database models
+ |--job.test.js         # tests for job database models
+ |--user.js             # user database models
+ |--user.test.js        # tests for user database models
 
 routes\                 # Routes folder
- |--auth.js             # Static html
- |--auth.test.js        # Static html
- |--companies.js        # Static html
- |--companies.test.js   # Static html
- |--jobs.js             # Static html
- |--users.js            # Static html
- |--users.test.js       # Static html
+ |--auth.js             # authorization routes
+ |--auth.test.js        # tests for authorization routes
+ |--companies.js        # companies routes
+ |--companies.test.js   # tests for companies routes
+ |--jobs.js             # jobs routes
+ |--users.js            # users routes
+ |--users.test.js       # tests for users routes
 
-schemas\                # Schemas folder
- |--companyFilter.json  # Static html
- |--companyNEW.json     # Static html
- |--companyUpdate.json  # Static html
- |--jobNew.json         # Static html
- |--userAuth.json       # Static html
- |--userNew.json        # Static html
- |--userRegister.json   # Static html
- |--userUpdate.json     # Static html
+schemas\                # JSON Schema folder
+ |--companyFilter.json  # schema for company queries
+ |--companyNEW.json     # schema for new companies
+ |--companyUpdate.json  # schema for companie updates
+ |--jobNew.json         # scema for new jobs
+ |--userAuth.json       # schema for user authorization
+ |--userNew.json        # schema for new users (admin created)
+ |--userRegister.json   # schema for user register
+ |--userUpdate.json     # schema for user update
 
 
 \                       # Root folder
- |--app.js              # Environment variables and configuration
- |--app.test.js         # Controllers
- |--config.js           # Custom express middlewares
- |--config.test.js      # Mongoose models
- |--db.js               # Routes
- |--jobly-schema.sql    # Business logic
- |--jobly-seed.sql      # Utility classes and functions
- |--package.json        # Request data validation schemas
- |--readme.md           # App entry point
- |--server.js           # App entry point
+ |--app.js              # main routes scripts
+ |--app.test.js         # main routes tests
+ |--config.js           # app configuration
+ |--config.test.js      # app configuration tests
+ |--db.js               # db setup
+ |--jobly-schema.sql    # db schema setup
+ |--jobly-seed.sql      # db seed data
+ |--package.json        # node dependencies
+ |--readme.md           # project readme
+ |--server.js           # server setup
 ```
 
 ### API Endpoints
