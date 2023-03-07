@@ -1,8 +1,8 @@
 # Jobly Backend
 
-# RESTful API Node Express Mongoose Example
+# RESTful API Node Express
 
-The project builds RESTful APIs using Node.js and Postgresql
+A RESTful job search API using Node.js and Postgresql
 
 ## Manual Installation
 
@@ -20,12 +20,11 @@ npm install
 ```
 
 Set the environment variables:
-
+(note defaults are present in code if you don't create a .env)
 ```bash
-cp .env.example .env
+touch .env
 # open .env and modify the environment variables
 ```
-
 
 ## Table of Contents
 
